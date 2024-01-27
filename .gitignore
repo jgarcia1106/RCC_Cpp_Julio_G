@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# Directories
+build/
+dist/
+
+# Developer Environment Files
+*.dep.inc
+Makefile-*.mk
+*.dep.inc
