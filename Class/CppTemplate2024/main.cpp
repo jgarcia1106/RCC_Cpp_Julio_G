@@ -6,29 +6,40 @@
  */
 
 //System Libraries
-#include <iostream> //Input-Output Library
+#include <iostream>
+#include <cmath> 
+#include <iomanip> 
+
 using namespace std;
 
-//User Libraries
+// Function to calculate present value
+float psntVal(float futureValue, float interestRate, int years) {
+    return futureValue / pow((1 + interestRate), years);
+}
 
-//Global Constants - Math,Physics,Chemistry,Conversions7
+int main() {
+    float futureValue, interestRate;
+    int years;
 
-//Function Prototypes
+    cout << "This is a Present Value Computation" << endl;
+    
+    cout << "Input the Future Value in Dollars" << endl;
+    cin >> futureValue;
+    
+    cout << "Input the Number of Years" << endl;
+    cin >> years;
 
-//Program-Execution Begins Here
+    cout << "Input the Interest Rate %/yr" << endl;
+    cin >> interestRate;
+    interestRate /= 100; // Convert percentage to decimal
 
-int main(int argc, char** argv) {
-    //Set a random seed
-    
-    //Declare all variables
-    
-    //Initialize all variables
-    
-    //Process or Map solutions
-    
-    //Display the output
-    
-    //Exit the Program
+    // Calculate present value
+    float presentValue = psntVal(futureValue, interestRate, years);
+
+    // Display the result
+    cout << fixed << setprecision(2);
+    cout << "The Present Value = $" << presentValue;
+
     return 0;
 }
 

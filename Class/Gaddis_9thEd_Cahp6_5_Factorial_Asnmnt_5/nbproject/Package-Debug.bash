@@ -13,9 +13,9 @@ CND_BUILDDIR=build
 CND_DLIB_EXT=dll
 NBTMPDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tmp-packaging
 TMPDIRNAME=tmp-packaging
-OUTPUT_PATH=${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gaddis_9thed_cahp6_5_factorial_asnmnt_5_1
-OUTPUT_BASENAME=gaddis_9thed_cahp6_5_factorial_asnmnt_5_1
-PACKAGE_TOP_DIR=gaddis9thedcahp65factorialasnmnt51/
+OUTPUT_PATH=${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/gaddis_9thed_cahp6_5_factorial_asnmnt_5
+OUTPUT_BASENAME=gaddis_9thed_cahp6_5_factorial_asnmnt_5
+PACKAGE_TOP_DIR=gaddis9thedcahp65factorialasnmnt5/
 
 # Functions
 function checkReturnCode
@@ -60,15 +60,15 @@ mkdir -p ${NBTMPDIR}
 
 # Copy files and create directories and links
 cd "${TOP}"
-makeDirectory "${NBTMPDIR}/gaddis9thedcahp65factorialasnmnt51/bin"
+makeDirectory "${NBTMPDIR}/gaddis9thedcahp65factorialasnmnt5/bin"
 copyFileToTmpDir "${OUTPUT_PATH}.exe" "${NBTMPDIR}/${PACKAGE_TOP_DIR}bin/${OUTPUT_BASENAME}.exe" 0755
 
 
 # Generate tar file
 cd "${TOP}"
-rm -f ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/gaddis9thedcahp65factorialasnmnt51.tar
+rm -f ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/gaddis9thedcahp65factorialasnmnt5.tar
 cd ${NBTMPDIR}
-tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/gaddis9thedcahp65factorialasnmnt51.tar *
+tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/gaddis9thedcahp65factorialasnmnt5.tar *
 checkReturnCode
 
 # Cleanup
