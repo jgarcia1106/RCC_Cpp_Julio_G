@@ -5,39 +5,37 @@
  * Purpose: Game Development - Pac-Man v1.0
  */
 
-//System Libraries
 #include <iostream>
 #include <vector>
 #include <string>
-#include <cstdlib> // Include at the top for rand()
+#include <cstdlib>
 
-// Define global variables and constants
-const int BOARD_WIDTH = 20;
-const int BOARD_HEIGHT = 10;
-std::vector<std::string> gameBoard(BOARD_HEIGHT);
-int playerX, playerY; // Player's position
+// Global variables and constants
+const int brdWdth = 20;
+const int brdHght = 10;
+std::vector<std::string> gmBoard(brdHght);
+int plyrX, plyrY; // Player's position
 int score, lives;
-int ghostX, ghostY; // Ghost's position
-
+int ghstX, ghstY; // Ghost's position
 
 // Function declarations
-void InitializeGame();
-void DisplayBoard();
+void InitGame();
+void DispBoard();
 void GetInput();
-void UpdateGame();
-void CheckCollision();
-void MoveGhosts();
-bool CheckWinLose();
+void UpdGame();
+void ChkColl();
+void MvGhosts();
+bool ChkWL();
 void EndGame();
 
 int main() {
-    InitializeGame();
+    InitGame();
 
     while (true) {
-        DisplayBoard();
+        DispBoard();
         GetInput();
-        UpdateGame();
-        if (CheckWinLose()) {
+        UpdGame();
+        if (ChkWL()) {
             break;
         }
     }
@@ -46,159 +44,122 @@ int main() {
     return 0;
 }
 
-// Function definitions
-void InitializeGame() {
-    // Initialize game variables
-    // Fill the game board with spaces and walls
-    for (int i = 0; i < BOARD_HEIGHT; ++i) {
-        gameBoard[i] = std::string(BOARD_WIDTH, ' '); // Empty space
-        if (i == 0 || i == BOARD_HEIGHT - 1) {
-            gameBoard[i] = std::string(BOARD_WIDTH, '#'); // Top and bottom walls
+void InitGame() {
+    for (int i = 0; i < brdHght; ++i) {
+        gmBoard[i] = std::string(brdWdth, ' ');
+        if (i == 0 || i == brdHght - 1) {
+            gmBoard[i] = std::string(brdWdth, '#');
         } else {
-            gameBoard[i][0] = gameBoard[i][BOARD_WIDTH - 1] = '#'; // Side walls
+            gmBoard[i][0] = gmBoard[i][brdWdth - 1] = '#';
         }
     }
 
-    // Initialize player position
-    playerX = BOARD_WIDTH / 2;
-    playerY = BOARD_HEIGHT / 2;
-    gameBoard[playerY][playerX] = 'P'; // Representing Pac-Man as 'P'
+    plyrX = brdWdth / 2;
+    plyrY = brdHght / 2;
+    gmBoard[plyrY][plyrX] = 'P';
 
-    // Initialize score and lives
     score = 0;
     lives = 3;
     
-    // Place pellets
-    for (int y = 1; y < BOARD_HEIGHT - 1; ++y) {
-        for (int x = 1; x < BOARD_WIDTH - 1; ++x) {
-            if (gameBoard[y][x] == ' ') {
-                gameBoard[y][x] = '.'; // Representing pellets with dots
+    for (int y = 1; y < brdHght - 1; ++y) {
+        for (int x = 1; x < brdWdth - 1; ++x) {
+            if (gmBoard[y][x] == ' ') {
+                gmBoard[y][x] = '.';
             }
         }
     }
 
-    // Make sure the initial position of Pac-Man doesn't have a pellet
-    gameBoard[playerY][playerX] = 'P';
+    gmBoard[plyrY][plyrX] = 'P';
 
-    // Initialize ghost position
-    ghostX = 1; // Starting position of the ghost
-    ghostY = 1;
-    gameBoard[ghostY][ghostX] = 'G'; // Representing ghost as 'G'    
-    
+    ghstX = 1;
+    ghstY = 1;
+    gmBoard[ghstY][ghstX] = 'G';    
 }
 
-void DisplayBoard() {
-    // Display the game board
-    system("clear"); // For Linux/MacOS, use "cls" on Windows
+void DispBoard() {
+    system("clear");
 
-    for (int i = 0; i < BOARD_HEIGHT; ++i) {
-        std::cout << gameBoard[i] << std::endl;
+    for (int i = 0; i < brdHght; ++i) {
+        std::cout << gmBoard[i] << std::endl;
     }
 
-    // Display score and lives
     std::cout << "Score: " << score << " Lives: " << lives << std::endl;
 }
 
 void GetInput() {
-    // Get player input
     char input;
     std::cin >> input;
 
     switch (input) {
-        case 'w': // Move up
-            playerY = std::max(1, playerY - 1);
-            break;
-        case 's': // Move down
-            playerY = std::min(BOARD_HEIGHT - 2, playerY + 1);
-            break;
-        case 'a': // Move left
-            playerX = std::max(1, playerX - 1);
-            break;
-        case 'd': // Move right
-            playerX = std::min(BOARD_WIDTH - 2, playerX + 1);
-            break;
+        case 'w': plyrY = std::max(1, plyrY - 1); break;
+        case 's': plyrY = std::min(brdHght - 2, plyrY + 1); break;
+        case 'a': plyrX = std::max(1, plyrX - 1); break;
+        case 'd': plyrX = std::min(brdWdth - 2, plyrX + 1); break;
     }
 }
 
-void UpdateGame() {
-    // Update the game state
-    // Clear the previous player position
-    for (int y = 1; y < BOARD_HEIGHT - 1; ++y) {
-        for (int x = 1; x < BOARD_WIDTH - 1; ++x) {
-            if (gameBoard[y][x] == 'P') {
-                gameBoard[y][x] = ' '; // Replace with space
+void UpdGame() {
+    for (int y = 1; y < brdHght - 1; ++y) {
+        for (int x = 1; x < brdWdth - 1; ++x) {
+            if (gmBoard[y][x] == 'P') {
+                gmBoard[y][x] = ' ';
             }
         }
     }
 
-    // Update the player's new position
-    gameBoard[playerY][playerX] = 'P';
-    
-    // Check and update for pellet collection
-    if (gameBoard[playerY][playerX] == '.') {
-        score++; // Increase the score when a pellet is collected
+    if (gmBoard[plyrY][plyrX] == '.') {
+        score++;
     }
 
-    // Update the player's new position
-    gameBoard[playerY][playerX] = 'P';
+    gmBoard[plyrY][plyrX] = 'P';
 
-    // Collision detection
-    if (playerX == ghostX && playerY == ghostY) {
-        lives--; // Lose a life if Pac-Man collides with a ghost
+    if (plyrX == ghstX && plyrY == ghstY) {
+        lives--;
         if (lives > 0) {
-            // Reset positions
-            playerX = BOARD_WIDTH / 2;
-            playerY = BOARD_HEIGHT / 2;
-            ghostX = 1;
-            ghostY = 1;
+            plyrX = brdWdth / 2;
+            plyrY = brdHght / 2;
+            ghstX = 1;
+            ghstY = 1;
         }
     }
-    
-    // Move the Ghosts
-    MoveGhosts();    
 
-    // Collision detection
-    if (playerX == ghostX && playerY == ghostY) {
-        lives--; // Lose a life if Pac-Man collides with a ghost
+    MvGhosts();
+
+    if (plyrX == ghstX && plyrY == ghstY) {
+        lives--;
         if (lives > 0) {
-            // Reset positions
-            playerX = BOARD_WIDTH / 2;
-            playerY = BOARD_HEIGHT / 2;
-            ghostX = 1;
-            ghostY = 1;
+            plyrX = brdWdth / 2;
+            plyrY = brdHght / 2;
+            ghstX = 1;
+            ghstY = 1;
         }
     }
 }
 
-void CheckCollision() {
-    // Check for collisions
+void ChkColl() {
+    // Collision checking logic
 }
 
-void MoveGhosts() {
-    // Clear the previous ghost position
-    gameBoard[ghostY][ghostX] = ' '; 
-
-    // Randomly move the ghost
+void MvGhosts() {
+    gmBoard[ghstY][ghstX] = ' ';
     int direction = rand() % 4;
     switch (direction) {
-        case 0: ghostY = std::max(1, ghostY - 1); break; // Move up
-        case 1: ghostY = std::min(BOARD_HEIGHT - 2, ghostY + 1); break; // Move down
-        case 2: ghostX = std::max(1, ghostX - 1); break; // Move left
-        case 3: ghostX = std::min(BOARD_WIDTH - 2, ghostX + 1); break; // Move right
+        case 0: ghstY = std::max(1, ghstY - 1); break;
+        case 1: ghstY = std::min(brdHght - 2, ghstY + 1); break;
+        case 2: ghstX = std::max(1, ghstX - 1); break;
+        case 3: ghstX = std::min(brdWdth - 2, ghstX + 1); break;
     }
 
-    // Update the ghost's new position
-    if (gameBoard[ghostY][ghostX] == ' ' || gameBoard[ghostY][ghostX] == '.') {
-        gameBoard[ghostY][ghostX] = 'G';
+    if (gmBoard[ghstY][ghstX] == ' ' || gmBoard[ghstY][ghstX] == '.') {
+        gmBoard[ghstY][ghstX] = 'G';
     }
 }
 
-bool CheckWinLose() {
-    // Check if the player wins or loses
+bool ChkWL() {
+    // Win/Lose checking logic
     return false;
 }
 
 void EndGame() {
-    // Display end game message
+    // End game message
 }
-
