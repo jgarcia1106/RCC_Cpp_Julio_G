@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=RCC_Cpp_Project_1_JulioG
+PROJECTNAME=Project_1_Pac_Man_Game_JulioG
 
 # Active Configuration
 DEFAULTCONF=Debug

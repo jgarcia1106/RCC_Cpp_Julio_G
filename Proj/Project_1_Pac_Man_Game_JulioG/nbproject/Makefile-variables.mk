@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=Cygwin-Windows
 CND_ARTIFACT_DIR_Debug=dist/Debug/Cygwin-Windows
-CND_ARTIFACT_NAME_Debug=rcc_cpp_project_1_juliog
-CND_ARTIFACT_PATH_Debug=dist/Debug/Cygwin-Windows/rcc_cpp_project_1_juliog
+CND_ARTIFACT_NAME_Debug=project_1_pac_man_game_juliog
+CND_ARTIFACT_PATH_Debug=dist/Debug/Cygwin-Windows/project_1_pac_man_game_juliog
 CND_PACKAGE_DIR_Debug=dist/Debug/Cygwin-Windows/package
-CND_PACKAGE_NAME_Debug=rcccppproject1juliog.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/Cygwin-Windows/package/rcccppproject1juliog.tar
+CND_PACKAGE_NAME_Debug=project1pacmangamejuliog.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/Cygwin-Windows/package/project1pacmangamejuliog.tar
 # Release configuration
 CND_PLATFORM_Release=Cygwin-Windows
 CND_ARTIFACT_DIR_Release=dist/Release/Cygwin-Windows
-CND_ARTIFACT_NAME_Release=rcc_cpp_project_1_juliog
-CND_ARTIFACT_PATH_Release=dist/Release/Cygwin-Windows/rcc_cpp_project_1_juliog
+CND_ARTIFACT_NAME_Release=project_1_pac_man_game_juliog
+CND_ARTIFACT_PATH_Release=dist/Release/Cygwin-Windows/project_1_pac_man_game_juliog
 CND_PACKAGE_DIR_Release=dist/Release/Cygwin-Windows/package
-CND_PACKAGE_NAME_Release=rcccppproject1juliog.tar
-CND_PACKAGE_PATH_Release=dist/Release/Cygwin-Windows/package/rcccppproject1juliog.tar
+CND_PACKAGE_NAME_Release=project1pacmangamejuliog.tar
+CND_PACKAGE_PATH_Release=dist/Release/Cygwin-Windows/package/project1pacmangamejuliog.tar
 #
 # include compiler specific variables
 #
