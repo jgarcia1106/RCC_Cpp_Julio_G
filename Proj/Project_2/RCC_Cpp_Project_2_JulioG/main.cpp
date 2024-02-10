@@ -19,21 +19,21 @@ int score, lives; // Player's score and lives
 int ghstX, ghstY; // Ghost's position (x, y)
 
 // Function declarations
-void InitGame(); // Initializes the game by setting up the board, player, and ghost
-void DispBoard(); // Displays the current state of the game board
-void GetInput(); // Gets player input to move Pac-Man
+void IntGame(); // Initializes the game by setting up the board, player, and ghost
+void DispBrd(); // Displays the current state of the game board
+void GtInput(); // Gets player input to move Pac-Man
 void UpdGame(); // Updates the game state based on player input and game logic
 void ChkColl(); // Checks for collisions (currently unused)
-void MvGhosts(); // Moves the ghost to a new position
+void MvGhsts(); // Moves the ghost to a new position
 bool ChkWL(); // Checks if the player has won or lost (currently stubbed out)
 void EndGame(); // Ends the game and displays a message
 
 int main() {
-    InitGame(); // Start the game setup
+    IntGame(); // Start the game setup
 
     while (true) {
-        DispBoard(); // show the current board
-        GetInput(); // Get the player's move
+        DispBrd(); // show the current board
+        GtInput(); // Get the player's move
         UpdGame(); // Update game state (move player and ghosts, check for win/loss)
         if (ChkWL()) { // Check if the game has ended
             break; // Properly exits the loop when lives are 0 
@@ -45,7 +45,7 @@ int main() {
 }
 
 
-void InitGame() {
+void IntGame() {
     // Initialize the game board with walls and dots
     for (int i = 0; i < brdHght; ++i) {
         gmBoard[i] = std::string(brdWdth, ' '); // Fill the middle of the board with spaces
@@ -79,7 +79,7 @@ void InitGame() {
     gmBoard[ghstY][ghstX] = 'G'; // 'G' represents the ghost   
 }
 
-void DispBoard() {
+void DispBrd() {
     system("clear"); // Clear the console screen (use "cls" on Windows)
 
     // Print the game board
@@ -91,7 +91,7 @@ void DispBoard() {
     std::cout << "Score: " << score << " Lives: " << lives << std::endl;
 }
 
-void GetInput() {
+void GtInput() {
     char input;
     std::cin >> input; // Read a character from the user
 
@@ -135,7 +135,7 @@ void UpdGame() {
     }
 
     // Move the ghost to a new position
-    MvGhosts();
+    MvGhsts();
 
     // Check again for collision with the ghost after it moves
     if (plyrX == ghstX && plyrY == ghstY) {
@@ -154,7 +154,7 @@ void ChkColl() {
     // You could implement detailed collision logic here, such as wall collision or special item collection.
 }
 
-void MvGhosts() {
+void MvGhsts() {
     // Remove the ghost from its current position
     gmBoard[ghstY][ghstX] = ' ';
 
@@ -186,6 +186,6 @@ bool ChkWL() {
 void EndGame() {
     // Display a message at the end of the game
     // This could include the player's final score and a message about winning or losing
-    std::cout << "Game Over! Your score: " << score << std::endl;
+    std::cout << "GAME OVER! You Did Great BUT it's time to Go! Your score: " << score << std::endl;
     // Additional logic could be added here for high score tracking or replay prompt
 }
