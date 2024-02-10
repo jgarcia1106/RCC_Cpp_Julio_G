@@ -31,18 +31,19 @@ void EndGame(); // Ends the game and displays a message
 int main() {
     InitGame(); // Start the game setup
 
-    while (true) { // Main game loop
-        DispBoard(); // Show the current board
+    while (true) {
+        DispBoard(); // show the current board
         GetInput(); // Get the player's move
         UpdGame(); // Update game state (move player and ghosts, check for win/loss)
         if (ChkWL()) { // Check if the game has ended
-            break; // Exit the loop if the game is over
+            break; // Properly exits the loop when lives are 0 
         }
     }
 
-    EndGame(); // Show the end game message
-    return 0; // Exit the program
+    EndGame();
+    return 0;
 }
+
 
 void InitGame() {
     // Initialize the game board with walls and dots
@@ -174,9 +175,12 @@ void MvGhosts() {
 
 bool ChkWL() {
     // Check for win/lose conditions
-    // This function is a placeholder and should be expanded to check for game-ending conditions
-    // For example, checking if all dots are collected or if the player has no lives left
-    return false; // Return false to keep the game running until conditions are met
+    if (lives <= 0) {
+        return true; // Player has lost the game
+    }
+    // Additional conditions can be added here (e.g., all dots collected)
+
+    return false; // Game continues
 }
 
 void EndGame() {
