@@ -3,6 +3,20 @@
 #include <string>
 #include <cstdlib> // For random number generation and system clear
 
+class GameConfig {
+public:
+    static const int maxLives; // Static variable for maximum lives
+    // Add other game configuration settings as static members if needed
+
+    static void displayConfig() {
+        std::cout << "Maximum Lives: " << maxLives << std::endl;
+        // Display other configurations if necessary
+    }
+};
+
+// Initialize static members of GameConfig
+const int GameConfig::maxLives = 3;
+
 class Game {
 private:
     const int brdWdth = 20;
@@ -13,7 +27,7 @@ private:
     int ghstX, ghstY;
 
 public:
-    Game() : gmBoard(brdHght, std::string(brdWdth, ' ')), score(0), lives(3), plyrX(brdWdth / 2), plyrY(brdHght / 2), ghstX(1), ghstY(1) {
+    Game() : gmBoard(brdHght, std::string(brdWdth, ' ')), score(0), lives(GameConfig::maxLives), plyrX(brdWdth / 2), plyrY(brdHght / 2), ghstX(1), ghstY(1) {
         IntGame();
     }
 
@@ -48,6 +62,13 @@ public:
             case 's': plyrY = std::min(brdHght - 2, plyrY + 1); break;
             case 'a': plyrX = std::max(1, plyrX - 1); break;
             case 'd': plyrX = std::min(brdWdth - 2, plyrX + 1); break;
+            case 'q': // Quit game
+                std::cout << "Quitting game..." << std::endl;
+                std::exit(0);
+                break;
+            default:
+                std::cout << "Invalid input! Use WASD to move, Q to quit." << std::endl;
+                break;
         }
     }
 
@@ -99,6 +120,9 @@ public:
 };
 
 int main() {
+    // Optionally display the game configuration before starting
+    GameConfig::displayConfig();
+
     Game pacManGame;
     pacManGame.Run();
     return 0;
