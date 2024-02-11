@@ -57,6 +57,7 @@ public:
     void GtInput() {
         char input;
         std::cin >> input;
+        int oldX = plyrX, oldY = plyrY; // Store old position
         switch (input) {
             case 'w': plyrY = std::max(1, plyrY - 1); break;
             case 's': plyrY = std::min(brdHght - 2, plyrY + 1); break;
@@ -68,20 +69,34 @@ public:
                 break;
             default:
                 std::cout << "Invalid input! Use WASD to move, Q to quit." << std::endl;
-                break;
+                return; // Do not clear 'P' or move if input is invalid
+        }
+
+        // Clear old position if 'P' actually moved
+        if (oldX != plyrX || oldY != plyrY) {
+            gmBoard[oldY][oldX] = '.'; // Replace the old position with a dot
         }
     }
 
     void UpdGame() {
+        // If 'P' moves onto a dot, increase score. This check is necessary before setting 'P' to the new position.
         if (gmBoard[plyrY][plyrX] == '.') score++;
+
+        // Update 'P' to new position
         gmBoard[plyrY][plyrX] = 'P';
+
+        // Check for collision with ghost
         if (plyrX == ghstX && plyrY == ghstY) {
             lives--;
             if (lives > 0) ResetPositions();
+            else {
+                // Clear 'P' from the board on game over to prevent it from rendering after death
+                gmBoard[plyrY][plyrX] = '.';
+            }
         }
+
         MvGhsts();
     }
-
     void MvGhsts() {
         gmBoard[ghstY][ghstX] = ' ';
         int direction = rand() % 4;
