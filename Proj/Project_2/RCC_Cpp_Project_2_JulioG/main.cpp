@@ -2,7 +2,7 @@
  * File:   main.cpp
  * Author: Julio G.
  * Created on February 9, 2024, 4:30 AM
- * Purpose: Game Development - Pac-Man v1.2
+ * Purpose: Game Development - Pac-Man v1.5
  */
 
 #include <iostream>
