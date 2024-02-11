@@ -1,13 +1,16 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <cstdlib> // For random number generation and system clear
+#include <cstdlib> // For system clear
+#include <fstream> // For file operations
+#include <algorithm> // For sort
 
 class GameConfig {
 public:
     static const int maxLives; // Static variable for maximum lives
-    static void displayConfig(std::ostream& out = std::cout) {
-        out << "Maximum Lives: " << maxLives << std::endl;
+
+    static void displayConfig() {
+        std::cout << "Maximum Lives: " << maxLives << std::endl;
     }
 };
 
@@ -21,10 +24,12 @@ private:
     int plyrX, plyrY;
     int score, lives;
     int ghstX, ghstY;
-    std::vector<int> highScores = {250, 100, 150}; // Made-up high scores
+    static std::vector<int> topScores; // Static vector to store top 3 scores
+    static const std::string scoreFileName; // File name to store the scores
 
 public:
     Game() : gmBoard(brdHght, std::string(brdWdth, ' ')), score(0), lives(GameConfig::maxLives), plyrX(brdWdth / 2), plyrY(brdHght / 2), ghstX(1), ghstY(1) {
+        readTopScores();
         IntGame();
     }
 
@@ -43,68 +48,48 @@ public:
         gmBoard[ghstY][ghstX] = 'G';
     }
 
-    void DispBrd(std::ostream& out = std::cout) {
+    void DispBrd() {
         system("clear"); // For Windows, use system("cls");
-        for (const auto& row : gmBoard) {
-            out << row << std::endl;
+        for (const auto &row : gmBoard) {
+            std::cout << row << std::endl;
         }
-        out << "Score: " << score << " Lives: " << lives << std::endl;
+        std::cout << "Score: " << score << " Lives: " << lives << std::endl;
     }
 
     void GtInput() {
         char input;
         std::cin >> input;
-        int oldX = plyrX, oldY = plyrY; // Store old position
+        int oldX = plyrX, oldY = plyrY;
         switch (input) {
             case 'w': plyrY = std::max(1, plyrY - 1); break;
             case 's': plyrY = std::min(brdHght - 2, plyrY + 1); break;
             case 'a': plyrX = std::max(1, plyrX - 1); break;
             case 'd': plyrX = std::min(brdWdth - 2, plyrX + 1); break;
-            case 'q': // Quit game
+            case 'q':
                 std::cout << "Quitting game..." << std::endl;
                 std::exit(0);
-                break;
             default:
                 std::cout << "Invalid input! Use WASD to move, Q to quit." << std::endl;
-                return; // Do not clear 'P' or move if input is invalid
+                return;
         }
 
-        // Clear old position if 'P' actually moved
         if (oldX != plyrX || oldY != plyrY) {
-            gmBoard[oldY][oldX] = '.'; // Replace the old position with a dot
-            gmBoard[plyrY][plyrX] = 'P'; // Move 'P' to the new position
+            gmBoard[oldY][oldX] = '.';
         }
     }
 
     void UpdGame() {
-       // Check if 'P' is on a dot and eat the dot
-       if (gmBoard[plyrY][plyrX] == '.') {
-           score++; // Increment score because a dot is eaten
-           gmBoard[plyrY][plyrX] = ' '; // Remove the dot by setting the space to empty
-       }
+        if (gmBoard[plyrY][plyrX] == '.') score++;
+        gmBoard[plyrY][plyrX] = 'P';
 
-       // Update 'P's position on the game board
-       for (int y = 0; y < brdHght; ++y) {
-           for (int x = 0; x < brdWdth; ++x) {
-               if (gmBoard[y][x] == 'P') {
-                   gmBoard[y][x] = ' '; // Clear 'P's old position
-                   break; // Exit the loop once 'P's old position is cleared
-               }
-           }
-       }
-       gmBoard[plyrY][plyrX] = 'P'; // Place 'P' at the new position
+        if (plyrX == ghstX && plyrY == ghstY) {
+            lives--;
+            if (lives > 0) ResetPositions();
+            else gmBoard[plyrY][plyrX] = '.';
+        }
 
-       // Check for collisions with ghosts
-       if (plyrX == ghstX && plyrY == ghstY) {
-           lives--;
-           if (lives > 0) {
-               ResetPositions(); // Reset positions if lives are remaining
-           }
-       }
-
-       // Possibly add ghost movement logic here
-       MvGhsts();
-   }
+        MvGhsts();
+    }
 
     void MvGhsts() {
         gmBoard[ghstY][ghstX] = ' ';
@@ -124,40 +109,8 @@ public:
 
     void EndGame() {
         std::cout << "GAME OVER! Your score: " << score << std::endl;
-        addScoreToHighScores(score);
-        displayHighScores();
-    }
-
-    void ResetPositions(int difficulty = 1) {
-        plyrX = brdWdth / 2;
-        plyrY = brdHght / 2;
-        ghstX = 1 + difficulty; // Example of using the defaulted argument
-        ghstY = 1;
-    }
-
-    void bubbleSortHighScores() {
-        bool swapped;
-        do {
-            swapped = false;
-            for (size_t i = 1; i < highScores.size(); i++) {
-                if (highScores[i - 1] < highScores[i]) {
-                    std::swap(highScores[i - 1], highScores[i]);
-                    swapped = true;
-                }
-            }
-        } while (swapped);
-    }
-
-    void addScoreToHighScores(int newScore) {
-        highScores.push_back(newScore);
-        bubbleSortHighScores();
-    }
-
-    void displayHighScores(std::ostream& out = std::cout) {
-        out << "High Scores:" << std::endl;
-        for (const auto& score : highScores) {
-            out << score << std::endl;
-        }
+        updateTopScores(score);
+        displayTopScores();
     }
 
     void Run() {
@@ -166,8 +119,52 @@ public:
             GtInput();
             UpdGame();
         }
+        EndGame();
+    }
+
+    void ResetPositions() {
+        plyrX = brdWdth / 2;
+        plyrY = brdHght / 2;
+        ghstX = 1;
+        ghstY = 1;
+    }
+
+    static void readTopScores() {
+        topScores.clear();
+        std::ifstream file(scoreFileName);
+        int score;
+        while (file >> score) {
+            topScores.push_back(score);
+        }
+        file.close();
+    }
+
+    static void writeTopScores() {
+        std::ofstream file(scoreFileName, std::ofstream::trunc);
+        for (int score : topScores) {
+            file << score << std::endl;
+        }
+        file.close();
+    }
+
+    static void updateTopScores(int newScore) {
+        topScores.push_back(newScore);
+        std::sort(topScores.begin(), topScores.end(), std::greater<int>());
+        if (topScores.size() > 3) topScores.resize(3);
+        writeTopScores();
+    }
+
+    static void displayTopScores() {
+        std::cout << "Top Scores:\n";
+        for (size_t i = 0; i < topScores.size(); ++i) {
+            std::cout << i + 1 << ". " << topScores[i] << std::endl;
+        }
     }
 };
+
+// Initialize static member
+std::vector<int> Game::topScores;
+const std::string Game::scoreFileName = "top_scores.txt";
 
 int main() {
     GameConfig::displayConfig();
